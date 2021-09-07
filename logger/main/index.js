@@ -2,8 +2,14 @@
 
 const { TYPES, LEVEL } = require("../constants");
 const error = require("../error-handling");
-const { getType } = require('../utils');
+const { getType, printLogs } = require('../utils');
 
+/**
+ * 
+ * @param {Object} obj this object includes color(default=false), level(default="info"), array<writers>(required),
+                       timestamp(default=null), formatter(default=defaultFormatter)
+ * @returns a log class for printing messages
+ */
 function logger(obj) {
   const customOptions = {
     level: 2,
@@ -26,6 +32,10 @@ function logger(obj) {
     throw new Error(
       `Atleast one writer object is needed in writers, currently has zero`
     );
+
+  // check whether all the entries in object.writers is a writer class
+  for (const writer of obj.writers)
+  error.checkType(writer, TYPES.writer, "obj.writers array elements");
 
   // check if this property is provided by the user
   // leave as default value if it is null or undefined
@@ -60,7 +70,7 @@ function logger(obj) {
      * @param {string} message 
      */
     static error({ message, meta }) {
-      console.log(message, meta, LEVEL.error)
+      printLogs(customOptions, LEVEL.error, message, meta);
     }
 
     /**
@@ -68,7 +78,7 @@ function logger(obj) {
      * @param {string} message
      */
     static warn({ message, meta }) {
-      console.log(message, meta, LEVEL.warn)
+      printLogs(customOptions, LEVEL.warn, message, meta);
     }
 
     /**
@@ -76,7 +86,7 @@ function logger(obj) {
      * @param {string} message
      */
     static info({ message, meta }) {
-      console.log(message, meta, LEVEL.info)
+      printLogs(customOptions, LEVEL.info, message, meta);
     }
 
     /**
@@ -84,7 +94,7 @@ function logger(obj) {
      * @param {string} message
      */
     static http({ message, meta }) {
-      console.log(message, meta, LEVEL.http)
+      printLogs(customOptions, LEVEL.http, message, meta);
     }
 
     /**
@@ -92,7 +102,7 @@ function logger(obj) {
      * @param {string} message
      */
     static verbose({ message, meta }) {
-      console.log(message, meta, LEVEL.verbose)
+      printLogs(customOptions, LEVEL.verbose, message, meta);
     }
 
     /**
@@ -100,7 +110,7 @@ function logger(obj) {
      * @param {string} message
      */
     static debug({ message, meta }) {
-      console.log(message, meta, LEVEL.debug)
+      printLogs(customOptions, LEVEL.debug, message, meta);
     }
 
     /**
@@ -108,7 +118,7 @@ function logger(obj) {
      * @param {string} message
      */
     static silly({ message, meta }) {
-      console.log(message, meta, LEVEL.silly)
+      printLogs(customOptions, LEVEL.silly, message, meta);
     }
   };
 }
