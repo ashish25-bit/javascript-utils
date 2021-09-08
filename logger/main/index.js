@@ -57,6 +57,17 @@ function logger(obj) {
     if (Object.keys(LEVEL).includes(obj.level)) customOptions.level = LEVEL[obj.level];
   }
 
+  // check whether the formatter is given
+  if (
+    obj.hasOwnProperty('formatter') &&
+    obj.formatter !== undefined && obj.formatter !== null &&
+    getType(obj.formatter) === TYPES.function
+  ) {
+    const formatterResult = obj.formatter({ timestamp: obj.timestamp, level: 'debug', message: 'debug message', stack: null });
+    if (formatterResult !== undefined && formatterResult !== null)
+      customOptions.formatter = obj.formatter;
+  }
+
   customOptions["writers"] = obj.writers;
   customOptions.meta = obj.defaultMeta || "";
 
@@ -71,7 +82,12 @@ function logger(obj) {
      * @param {string} message 
      */
     static error({ message, meta }) {
-      printLogs(customOptions, LEVEL.error, message, meta);
+      try {
+        printLogs(customOptions, LEVEL.error, message, meta);
+      }
+      catch(err) {
+        console.log(err.message)
+      }
     }
 
     /**
@@ -79,7 +95,12 @@ function logger(obj) {
      * @param {string} message
      */
     static warn({ message, meta }) {
-      printLogs(customOptions, LEVEL.warn, message, meta);
+      try {
+        printLogs(customOptions, LEVEL.warn, message, meta);
+      }
+      catch(err) {
+        console.log(err.message)
+      }
     }
 
     /**
@@ -87,7 +108,12 @@ function logger(obj) {
      * @param {string} message
      */
     static info({ message, meta }) {
-      printLogs(customOptions, LEVEL.info, message, meta);
+      try {
+        printLogs(customOptions, LEVEL.info, message, meta);
+      }
+      catch(err) {
+        console.log(err.message)
+      }
     }
 
     /**
@@ -95,7 +121,12 @@ function logger(obj) {
      * @param {string} message
      */
     static http({ message, meta }) {
-      printLogs(customOptions, LEVEL.http, message, meta);
+      try {
+        printLogs(customOptions, LEVEL.http, message, meta);
+      }
+      catch(err) {
+        console.log(err.message)
+      }
     }
 
     /**
@@ -103,7 +134,12 @@ function logger(obj) {
      * @param {string} message
      */
     static verbose({ message, meta }) {
-      printLogs(customOptions, LEVEL.verbose, message, meta);
+      try {
+        printLogs(customOptions, LEVEL.verbose, message, meta);
+      }
+      catch(err) {
+        console.log(err.message)
+      }
     }
 
     /**
@@ -111,7 +147,12 @@ function logger(obj) {
      * @param {string} message
      */
     static debug({ message, meta }) {
-      printLogs(customOptions, LEVEL.debug, message, meta);
+      try {
+        printLogs(customOptions, LEVEL.debug, message, meta);
+      }
+      catch(err) {
+        console.log(err.message)
+      }
     }
 
     /**
@@ -119,7 +160,12 @@ function logger(obj) {
      * @param {string} message
      */
     static silly({ message, meta }) {
-      printLogs(customOptions, LEVEL.silly, message, meta);
+      try {
+        printLogs(customOptions, LEVEL.silly, message, meta);
+      }
+      catch(err) {
+        console.log(err.message)
+      }
     }
   };
 }
