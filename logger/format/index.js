@@ -1,5 +1,7 @@
+const path = require('path');
 const { OPTIONS, MSG_TYPES, PRINT_TYPES, TYPES } = require("../constants");
 const { getType } = require('../utils');
+const { appendToFile, appendToJSON } = require("../append");
 
 /**
  * this is default get message for
@@ -34,9 +36,11 @@ function defaultFormatter({ timestamp, message, level, meta }) {
 
 /**
  *
- * @param {object} object
+ * @param {object} object object consists of logType[console, file], color[true, false],
+                          info({ code, levelName }), message, messageType[json, plain],
+                          meta, fileDesination(if logType is file)
  */
-function format({ logType, color, info, message, messageType, formatter, stack, timestamp, meta }) {
+function format({ logType, color, info, message, messageType, formatter, stack, timestamp, meta, fileDestination }) {
 
   // if the message if of object/array type and
   // log type is console and message type is plain
@@ -55,6 +59,15 @@ function format({ logType, color, info, message, messageType, formatter, stack, 
 
       obj['level'] = info.name;
 
+      if (timestamp) {
+        obj['timestamp'] = timestamp();
+      }
+
+      if (formatter === defaultFormatter)
+        obj['message'] = message;
+      else
+        obj['message'] = base;
+
       if (meta !== undefined && meta !== "")
         obj["meta"] = meta;
 
@@ -65,7 +78,39 @@ function format({ logType, color, info, message, messageType, formatter, stack, 
   }
 
   else if (logType === PRINT_TYPES.file) {
-    console.log('written in file')
+    if (fileDestination === null || fileDestination === undefined)
+      return;
+
+    const extName = path.extname(fileDestination);
+
+    if (extName === ".txt") {
+      appendToFile({ filePath: fileDestination, message: base })
+    }
+    else if (extName === '.json') {
+      if (messageType === MSG_TYPES.plain) {
+        appendToJSON({ filePath: fileDestination, message: base });
+        return;
+      }
+
+      // logType, color, info, message, messageType, formatter, stack, timestamp, meta, fileDestination
+      const obj = {
+        level: info.name,
+        message: base,
+      };
+      if (timestamp) {
+        obj['timestamp'] = timestamp();
+      }
+
+      if (meta !== '' && meta !== undefined)
+        obj['meta'] = meta;
+
+      if (stack) {
+        stack = stack.split('\n').map(msg => msg.trim());
+        obj["stack"] = stack;
+      }
+
+      appendToJSON({ filePath: fileDestination, message: obj })
+    }
   }
 }
 
