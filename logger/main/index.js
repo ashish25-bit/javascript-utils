@@ -6,7 +6,7 @@ const { getType, printLogs } = require('../utils');
 const { defaultFormatter } = require("../format");
 
 /**
- * 
+ *
  * @param {Object} obj this object includes color(default=false), level(default="info"), array<writers>(required),
                        timestamp(default=null), formatter(default=defaultFormatter)
  * @returns a log class for printing messages
@@ -26,6 +26,9 @@ function logger(obj) {
   // the type of the argument should be 'Object'
   error.checkType(obj, TYPES.object, "object to fuction logger");
 
+  // obj.writers is a required property
+  error.checkProperty(obj, "writers", "argument obj to logger function");
+
   // obj.writers should be an array of writer object
   error.checkType(obj.writers, TYPES.array, "obj.writers for logger function");
 
@@ -36,7 +39,7 @@ function logger(obj) {
 
   // check whether all the entries in object.writers is a writer class
   for (const writer of obj.writers)
-  error.checkType(writer, TYPES.writer, "obj.writers array elements");
+    error.checkType(writer, TYPES.writer, "obj.writers array elements");
 
   // check if this property is provided by the user
   // leave as default value if it is null or undefined
@@ -54,13 +57,25 @@ function logger(obj) {
     obj.level !== null &&
     getType(obj.level) === TYPES.string
   ) {
-    if (Object.keys(LEVEL).includes(obj.level)) customOptions.level = LEVEL[obj.level];
+    if (Object.keys(LEVEL).includes(obj.level))
+      customOptions.level = LEVEL[obj.level];
   }
+
+  // check if timestamp property is provided
+  // if provided validate the type
+  if (
+    obj.hasOwnProperty("timestamp") &&
+    obj.timestamp !== undefined &&
+    obj.timestamp !== null &&
+    getType(obj.timestamp) === TYPES.function
+  )
+    customOptions.timestamp = obj.timestamp;
 
   // check whether the formatter is given
   if (
-    obj.hasOwnProperty('formatter') &&
-    obj.formatter !== undefined && obj.formatter !== null &&
+    obj.hasOwnProperty("formatter") &&
+    obj.formatter !== undefined &&
+    obj.formatter !== null &&
     getType(obj.formatter) === TYPES.function
   ) {
     const formatterResult = obj.formatter({ timestamp: obj.timestamp, level: 'debug', message: 'debug message', stack: null });
@@ -74,19 +89,19 @@ function logger(obj) {
   return class log {
     constructor() {
       if (this.constructor === log)
-        throw new Error('log class is abstract, it cannot be instantiated');
+        throw new Error("log class is abstract, it cannot be instantiated");
     }
 
     /**
      * logs warning message to the console/file
-     * @param {string} message 
+     * @param {string} message
      */
     static error({ message, meta }) {
       try {
         printLogs(customOptions, LEVEL.error, message, meta);
       }
-      catch(err) {
-        console.log(err.message)
+      catch (err) {
+        console.log(err.message);
       }
     }
 
@@ -98,8 +113,8 @@ function logger(obj) {
       try {
         printLogs(customOptions, LEVEL.warn, message, meta);
       }
-      catch(err) {
-        console.log(err.message)
+      catch (err) {
+        console.log(err.message);
       }
     }
 
@@ -111,8 +126,8 @@ function logger(obj) {
       try {
         printLogs(customOptions, LEVEL.info, message, meta);
       }
-      catch(err) {
-        console.log(err.message)
+      catch (err) {
+        console.log(err.message);
       }
     }
 
@@ -124,8 +139,8 @@ function logger(obj) {
       try {
         printLogs(customOptions, LEVEL.http, message, meta);
       }
-      catch(err) {
-        console.log(err.message)
+      catch (err) {
+        console.log(err.message);
       }
     }
 
@@ -137,8 +152,8 @@ function logger(obj) {
       try {
         printLogs(customOptions, LEVEL.verbose, message, meta);
       }
-      catch(err) {
-        console.log(err.message)
+      catch (err) {
+        console.log(err.message);
       }
     }
 
@@ -150,8 +165,8 @@ function logger(obj) {
       try {
         printLogs(customOptions, LEVEL.debug, message, meta);
       }
-      catch(err) {
-        console.log(err.message)
+      catch (err) {
+        console.log(err.message);
       }
     }
 
@@ -163,8 +178,8 @@ function logger(obj) {
       try {
         printLogs(customOptions, LEVEL.silly, message, meta);
       }
-      catch(err) {
-        console.log(err.message)
+      catch (err) {
+        console.log(err.message);
       }
     }
   };

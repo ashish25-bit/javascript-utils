@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 /**
- * 
+ *
  * @param {Object} object must contain filepath, message
  */
 function appendToJSON({ filePath, message }) {

@@ -6,7 +6,7 @@ const { appendToFile, appendToJSON } = require("../append");
 /**
  * this is default get message for
  * @param {object} object this object has message and level properties both required
- * @returns return the formatted 
+ * @returns return the formatted
  */
 function defaultFormatter({ timestamp, message, level, meta }) {
   let result = "";
@@ -40,8 +40,18 @@ function defaultFormatter({ timestamp, message, level, meta }) {
                           info({ code, levelName }), message, messageType[json, plain],
                           meta, fileDesination(if logType is file)
  */
-function format({ logType, color, info, message, messageType, formatter, stack, timestamp, meta, fileDestination }) {
-
+function format({
+  logType,
+  color,
+  info,
+  message,
+  messageType,
+  formatter,
+  stack,
+  timestamp,
+  meta,
+  fileDestination,
+}) {
   // if the message if of object/array type and
   // log type is console and message type is plain
   // then stringify the message
@@ -71,7 +81,7 @@ function format({ logType, color, info, message, messageType, formatter, stack, 
       if (meta !== undefined && meta !== "")
         obj["meta"] = meta;
 
-      console.log(obj)
+      console.log(obj);
     }
 
     process.stdout.write(OPTIONS.reset);
@@ -84,7 +94,7 @@ function format({ logType, color, info, message, messageType, formatter, stack, 
     const extName = path.extname(fileDestination);
 
     if (extName === ".txt") {
-      appendToFile({ filePath: fileDestination, message: base })
+      appendToFile({ filePath: fileDestination, message: base });
     }
     else if (extName === '.json') {
       if (messageType === MSG_TYPES.plain) {
@@ -109,7 +119,7 @@ function format({ logType, color, info, message, messageType, formatter, stack, 
         obj["stack"] = stack;
       }
 
-      appendToJSON({ filePath: fileDestination, message: obj })
+      appendToJSON({ filePath: fileDestination, message: obj });
     }
   }
 }

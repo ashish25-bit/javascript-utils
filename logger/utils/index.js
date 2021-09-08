@@ -53,7 +53,7 @@ function getLevelInfo(currLevel) {
  * @param {array} elems the properties which needs to be removed
  * @returns
  */
- function removeProperties(obj, elems) {
+function removeProperties(obj, elems) {
   if (elems === undefined || elems === null) return;
 
   if (obj === undefined || obj === null) return;
