@@ -1,4 +1,5 @@
 const TYPES = {
+  number: "Number",
   bool: "Boolean",
   array: "Array",
   string: "String",

@@ -1,6 +1,7 @@
 const { TYPES, MSG_TYPES, PRINT_TYPES } = require("../constants");
 const error = require("../error-handling");
 const { getType, getLevelInfo, removeProperties } = require('../utils');
+const { format } = require("../format");
 
 class Writer {
   #logType;
@@ -90,7 +91,21 @@ class Writer {
       info,
       ...removeProperties(obj, [ 'currLevel', 'level' ])
     };
-    console.log("console", formatObj)
+
+    // if the log is for error then throw err inside a try/catch block
+    // to get the stack trace
+    if (info.name === "error") {
+      try {
+        throw new Error(obj.message);
+      }
+      catch(err) {
+        formatObj.stack = err.stack;
+        format(formatObj);
+      }
+    }
+    else {
+      format(formatObj);
+    }
   }
 
   /**
@@ -108,7 +123,21 @@ class Writer {
       info,
       ...removeProperties(obj, [ 'currLevel', 'level' ])
     };
-    console.log("file", formatObj)
+
+    // if the log is for error then throw err inside a try/catch block
+    // to get the stack trace
+    if (info.name === "error") {
+      try {
+        throw new Error(obj.message);
+      }
+      catch(err) {
+        formatObj.stack = err.stack;
+        format(formatObj);
+      }
+    }
+    else {
+      format(formatObj);
+    }
   }
 }
 

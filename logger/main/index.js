@@ -3,6 +3,7 @@
 const { TYPES, LEVEL } = require("../constants");
 const error = require("../error-handling");
 const { getType, printLogs } = require('../utils');
+const { defaultFormatter } = require("../format");
 
 /**
  * 
@@ -15,7 +16,7 @@ function logger(obj) {
     level: 2,
     color: false,
     timestamp: null,
-    formatter: null,
+    formatter: defaultFormatter,
     meta: "",
   };
 
