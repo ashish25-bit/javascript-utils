@@ -1,6 +1,6 @@
 const { TYPES, MSG_TYPES, PRINT_TYPES } = require("../constants");
 const error = require("../error-handling");
-const { getType } = require('../utils');
+const { getType, getLevelInfo, removeProperties } = require('../utils');
 
 class Writer {
   #logType;
@@ -81,7 +81,16 @@ class Writer {
    * @param {object} obj this object consists of message, currLevel, level, meta data
    */
   Console(obj) {
-    console.log("console", obj)
+    const info = getLevelInfo(obj.currLevel);
+
+    const formatObj = {
+      logType: this.#logType,
+      messageType: this.#messageType,
+      stack: null,
+      info,
+      ...removeProperties(obj, [ 'currLevel', 'level' ])
+    };
+    console.log("console", formatObj)
   }
 
   /**
@@ -89,7 +98,17 @@ class Writer {
    * @param {Object} object with mandatory properties: message, level, currLevel
    */
   File(obj) {
-    console.log("file", obj)
+    const info = getLevelInfo(obj.currLevel);
+
+    const formatObj = {
+      logType: this.#logType,
+      messageType: this.#messageType,
+      fileDestination: this.#fileDestination,
+      stack: null,
+      info,
+      ...removeProperties(obj, [ 'currLevel', 'level' ])
+    };
+    console.log("file", formatObj)
   }
 }
 
