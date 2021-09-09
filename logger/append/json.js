@@ -6,6 +6,12 @@ const fs = require("fs");
  */
 function appendToJSON({ filePath, message }) {
   try {
+    // first checking whether the file is present in the given path
+    // if not then make the file
+    if (!fs.existsSync(filePath)) {
+      fs.writeFileSync(filePath, '');
+    }
+
     let data = fs.readFileSync(filePath, "utf8");
 
     if (data.trim() === "") {
